@@ -61,14 +61,14 @@ defmodule EventApi.E2E.EventFlowTest do
         %{
           "title" => "Event São Paulo",
           "start_at" => "2026-09-01T10:00:00Z",
-          "end_at" => "2026-09-01T12:00:00Z",
+          "end_at" => "2026-09-02T12:00:00Z",
           "location" => "São Paulo",
           "status" => "PUBLISHED"
         },
         %{
           "title" => "Event Rio de Janeiro",
           "start_at" => "2026-09-02T10:00:00Z",
-          "end_at" => "2026-09-02T12:00:00Z",
+          "end_at" => "2026-09-04T12:00:00Z",
           "location" => "Rio de Janeiro",
           "status" => "PUBLISHED"
         }
@@ -84,9 +84,9 @@ defmodule EventApi.E2E.EventFlowTest do
       conn = conn
       |> put_req_header("authorization", @auth_token)
       |> get(~p"/api/v1/events", %{
-        "dateFrom" => "2026-09-01",
-        "dateTo" => "2026-09-01",
-        "locations" => "São"
+        "dateFrom" => "2020-09-01",
+        "dateTo" => "2030-09-06",
+        "location" => "São"
       })
 
       response = json_response(conn, 200)
