@@ -79,13 +79,14 @@ defmodule EventApi.Events.Event do
 
   defp validate_status_transitions(changeset, _), do: changeset
 
-  defp update_updated_at(changeset) do
-    if changeset.valid? do
-      force_change(changeset, :updated_at, DateTime.utc_now())
-    else
-      changeset
-    end
-  end
+  # non needed with timestamps()
+  # defp update_updated_at(changeset) do
+  #   if changeset.valid? do
+  #     force_change(changeset, :updated_at, DateTime.utc_now())
+  #   else
+  #     changeset
+  #   end
+  # end
 
   @doc """
   Returns public fields only for public API exposure
