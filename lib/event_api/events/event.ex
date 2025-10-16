@@ -18,7 +18,6 @@ defmodule EventApi.Events.Event do
     # Private fields (never exposed publicly)
     field :internal_notes, :string
     field :created_by, :string
-    # field :updated_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
   end
@@ -36,7 +35,6 @@ defmodule EventApi.Events.Event do
     |> validate_date_range()
     |> validate_start_in_future()
     |> validate_status_transitions(event)
-    # |> update_updated_at()
   end
 
   defp validate_date_range(changeset) do
@@ -79,15 +77,6 @@ defmodule EventApi.Events.Event do
 
   defp validate_status_transitions(changeset, _), do: changeset
 
-  # non needed with timestamps()
-  # defp update_updated_at(changeset) do
-  #   if changeset.valid? do
-  #     force_change(changeset, :updated_at, DateTime.utc_now())
-  #   else
-  #     changeset
-  #   end
-  # end
-
   @doc """
   Returns public fields only for public API exposure
   """
@@ -103,9 +92,12 @@ defmodule EventApi.Events.Event do
     }
   end
 
-  defp is_upcoming?(%{start_at: start_at}) when not is_nil(start_at) do
+  @doc """
+  Check if an event is upcoming (start date is in the future)
+  """
+  def is_upcoming?(%{start_at: start_at}) when not is_nil(start_at) do
     DateTime.compare(start_at, DateTime.utc_now()) == :gt
   end
 
-  defp is_upcoming?(_), do: false
+  def is_upcoming?(_), do: false
 end

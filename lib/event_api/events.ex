@@ -85,31 +85,36 @@ defmodule EventApi.Events do
   Updates an event (only status and internal_notes allowed).
   """
   def update_event(%Event{} = event, attrs) do
-    old_fields = %{
-      title: event.title,
-      location: event.location,
-      start_at: event.start_at,
-      end_at: event.end_at
-    }
+    # Validar que solo se intenten actualizar status e internal_notes
+    allowed_fields = Map.take(attrs, ["status", "internal_notes"])
+    forbidden_fields = Map.drop(attrs, ["status", "internal_notes"])
 
-    # Only allow status and internal_notes updates
-    update_attrs = Map.take(attrs, ["status", "internal_notes"])
+    if map_size(forbidden_fields) > 0 do
+      {:error, :forbidden_fields}
+    else
+      old_fields = %{
+        title: event.title,
+        location: event.location,
+        start_at: event.start_at,
+        end_at: event.end_at
+      }
 
-    event
-    |> Event.changeset(update_attrs)
-    |> Repo.update()
-    |> case do
-      {:ok, updated_event} ->
-        # Invalidar cache si campos relevantes cambiaron
-        if cache_invalidation_required?(old_fields, updated_event) do
-          EventApi.Summaries.Cache.invalidate(updated_event)
-        end
+      event
+      |> Event.changeset(allowed_fields)
+      |> Repo.update()
+      |> case do
+        {:ok, updated_event} ->
+          # Invalidar cache si campos relevantes cambiaron
+          if cache_invalidation_required?(old_fields, updated_event) do
+            EventApi.Summaries.Cache.invalidate(updated_event)
+          end
 
-        # Notificar cambios de estado
-        notify_status_change(event, updated_event)
+          # Notificar cambios de estado
+          notify_status_change(event, updated_event)
 
-        {:ok, updated_event}
-      error -> error
+          {:ok, updated_event}
+        error -> error
+      end
     end
   end
 
@@ -124,10 +129,19 @@ defmodule EventApi.Events do
     case {old_event.status, new_event.status} do
       {"DRAFT", "PUBLISHED"} ->
         Notifications.notify_event_published(new_event)
+      {"CANCELLED", "PUBLISHED"} ->
+        Notifications.notify_event_republished(new_event)
       {_, "CANCELLED"} when old_event.status != "CANCELLED" ->
         Notifications.notify_event_cancelled(new_event)
-      _ ->
+      {old_status, new_status} when old_status != new_status ->
         Notifications.notify_event_updated(new_event)
+      _ ->
+        # Solo cambió internal_notes, no el status
+        if old_event.internal_notes != new_event.internal_notes do
+          Notifications.notify_event_updated(new_event)
+        else
+          :no_notification
+        end
     end
   end
 
