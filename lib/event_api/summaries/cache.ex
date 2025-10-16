@@ -78,6 +78,10 @@ defmodule EventApi.Summaries.Cache do
   In-memory cache for AI-generated summaries using ETS.
   """
   use GenServer
+  require Logger
+
+  # Alias para el proceso GenServer
+  @name __MODULE__
 
   @table_name :summary_cache
 

@@ -88,7 +88,7 @@ defmodule EventApi.Events.Event do
       end_at: event.end_at,
       location: event.location,
       status: event.status,
-      is_upcoming: is_upcoming?(event)
+      # is_upcoming: is_upcoming?(event)
     }
   end
 

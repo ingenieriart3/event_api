@@ -45,8 +45,17 @@ defmodule EventApi.Events do
 
   defp apply_date_filter(query, _), do: query
 
+  # defp apply_location_filter(query, %{"locations" => locations}) do
+  #   location_list = String.split(locations, ",") |> Enum.map(&String.trim/1)
+
+  #   query
+  #   |> where([e], fragment("LOWER(?) LIKE ANY(?)", e.location, ^location_list))
+  # end
   defp apply_location_filter(query, %{"locations" => locations}) do
-    location_list = String.split(locations, ",") |> Enum.map(&String.trim/1)
+    location_list =
+      String.split(locations, ",")
+      |> Enum.map(&String.trim/1)
+      |> Enum.map(&"%#{&1}%")  # ← Agregar wildcards
 
     query
     |> where([e], fragment("LOWER(?) LIKE ANY(?)", e.location, ^location_list))
