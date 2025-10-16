@@ -1,0 +1,280 @@
+type: collection.insomnia.rest/5.0
+name: Event Api
+meta:
+  id: wrk_a6b3f51cf272481692fceb68d6e72bc0
+  created: 1760622711098
+  modified: 1760622711098
+  description: ""
+collection:
+  - name: Private endpoints
+    meta:
+      id: fld_1f347004ccca48829018118ffa6d9c95
+      created: 1760623382396
+      modified: 1760623382396
+      sortKey: -1760623382396
+      description: ""
+    children:
+      - url: http://localhost:4000/api/v1/events
+        name: Create event ✅
+        meta:
+          id: req_90a23c4bcdc34781ae3f20b9c12c62f2
+          created: 1760622823641
+          modified: 1760631744418
+          isPrivate: false
+          description: ""
+          sortKey: -1760623400914
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"event": {
+            		"title": "Tech Conference 2029",
+            		"start_at": "2029-09-01T10:00:00Z",
+            		"end_at": "2028-09-01T17:00:00Z", 
+            		"location": "San Francisco",
+            		"status": "DRAFT",
+            		"internal_notes": "VIP list pending",
+            		"created_by": "cto@example.com"
+            	}
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_af41d3b1c0c749fc972e62e6c0ee8aa1
+          - name: User-Agent
+            value: insomnia/11.2.0
+            id: pair_5cc59b13d5e84260a6868826f30371f0
+          - id: pair_88c071ab1d16458aaecd5473a6e8240d
+            name: Authorization
+            value: Bearer admin-token-123
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/events/b4a331b0-2c10-497f-a6f7-c258cdcdbbb4
+        name: Update event status/internal notes ✅
+        meta:
+          id: req_0b8dc6c8d7c7459293f9d1fc4b6f140d
+          created: 1760622988400
+          modified: 1760634745611
+          isPrivate: false
+          description: ""
+          sortKey: -1760623400814
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"event": {
+            		"status": "s",
+            		"internal_notes": "VAparaahi"
+            	}
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_af41d3b1c0c749fc972e62e6c0ee8aa1
+          - name: User-Agent
+            value: insomnia/11.2.0
+            id: pair_5cc59b13d5e84260a6868826f30371f0
+          - id: pair_88c071ab1d16458aaecd5473a6e8240d
+            name: Authorization
+            value: Bearer admin-token-123
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/events?dateFrom=2024-09-01&dateTo=2026-09-30&location=asdfasdf&status=DRAFT&page=1&limit=20
+        name: List events with filtering ✅
+        meta:
+          id: req_8f2327133c0241abac1c4eec96826181
+          created: 1760623041000
+          modified: 1760635275524
+          isPrivate: false
+          description: ""
+          sortKey: -1760623400714
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+            id: pair_ba91a1fcdd724db2b8badffdcbf6dcf0
+          - id: pair_2e211370220c4f908f30afe8a2ee3be4
+            name: Authorization
+            value: Bearer admin-token-123
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/events
+        name: Create event without header ✅
+        meta:
+          id: req_99d3c99cf52440ef9df314d1d1f0ffb7
+          created: 1760624198037
+          modified: 1760633130679
+          isPrivate: false
+          description: ""
+          sortKey: -1760623400864
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"event": {
+            		"title": "Tech Conference 2024",
+            		"start_at": "2024-09-01T10:00:00Z",
+            		"end_at": "2024-09-01T17:00:00Z", 
+            		"location": "San Francisco",
+            		"status": "DRAFT",
+            		"internal_notes": "VIP list pending",
+            		"created_by": "cto@example.com"
+            	}
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_af41d3b1c0c749fc972e62e6c0ee8aa1
+          - name: User-Agent
+            value: insomnia/11.2.0
+            id: pair_5cc59b13d5e84260a6868826f30371f0
+          - id: pair_88c071ab1d16458aaecd5473a6e8240d
+            name: Authorization
+            value: Bearer admin-token-123
+            description: ""
+            disabled: true
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Public endpoints
+    meta:
+      id: fld_f09165ea8556497982628201616736b4
+      created: 1760623476890
+      modified: 1760623476890
+      sortKey: -1760623476890
+      description: ""
+    children:
+      - url: http://localhost:4000/health
+        name: Health ✅
+        meta:
+          id: req_c7cefdd5927e4f07a1fcecbf5e4bf79b
+          created: 1760622745835
+          modified: 1760636699231
+          isPrivate: false
+          description: ""
+          sortKey: -1760623493372
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/public/events
+        name: List public events ✅
+        meta:
+          id: req_eefa22d37f0f47aeb9f56c9a6a22300e
+          created: 1760623493272
+          modified: 1760637482152
+          isPrivate: false
+          description: ""
+          sortKey: -1760623493272
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/public/events/e3c1b8d9-3bd5-4c64-8c4d-0f6d9fb21c34/summary
+        name: Get AI summary (cached) ✅
+        meta:
+          id: req_fbb62022b3e74ae3baa8eeeeeecd7adb
+          created: 1760623618474
+          modified: 1760637979213
+          isPrivate: false
+          description: ""
+          sortKey: -1760623493172
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:4000/api/v1/public/events/e3c1b8d9-3bd5-4c64-8c4d-0f6d9fb21c34/summary/stream
+        name: Stream AI summary via SSE ✅
+        meta:
+          id: req_a7bea64614ac48a585b7dc1195e2b8bd
+          created: 1760623682220
+          modified: 1760637985623
+          isPrivate: false
+          description: |-
+            # streaming
+            curl -N "http://localhost:4000/api/v1/public/events/e3c1b8d9-3bd5-4c64-8c4d-0f6d9fb21c34/summary/stream"
+
+            # real time streaming
+            curl -N -v "http://localhost:4000/api/v1/public/events/e3c1b8d9-3bd5-4c64-8c4d-0f6d9fb21c34/summary/stream"
+          sortKey: -1760623493072
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_5164b88fcff8fa8678090f10d36f6b7f48f27630
+    created: 1760622711127
+    modified: 1760622711127
+environments:
+  name: Base Environment
+  meta:
+    id: env_5164b88fcff8fa8678090f10d36f6b7f48f27630
+    created: 1760622711124
+    modified: 1760622711124
+    isPrivate: false
