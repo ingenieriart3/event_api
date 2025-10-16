@@ -2,7 +2,6 @@ defmodule EventApiWeb.PublicController do
   use EventApiWeb, :controller
 
   alias EventApi.Events
-  # alias EventApi.Events.Event
   alias EventApi.Summaries.Cache
   alias EventApi.Summaries
 
@@ -44,52 +43,6 @@ defmodule EventApiWeb.PublicController do
     end
   end
 
-  # def stream_summary(conn, %{"id" => id}) do
-  #   event = Events.get_event!(id)
-
-  #   if event.status in ["PUBLISHED", "CANCELLED"] do
-  #     conn = conn
-  #     |> put_resp_header("content-type", "text/event-stream")
-  #     |> put_resp_header("cache-control", "no-cache")
-  #     |> put_resp_header("connection", "keep-alive")
-  #     |> send_chunked(200)
-
-  #     # Check cache for immediate response
-  #     case Cache.get(event) do
-  #       {:ok, cached_summary, cache_key} ->
-  #         conn
-  #         |> put_resp_header("x-summary-cache", "HIT")
-  #         |> put_resp_header("x-cache-key", cache_key)
-  #         |> chunk("data: #{Jason.encode!(%{chunk: cached_summary, done: true})}\n\n")
-
-  #       {:miss, cache_key} ->
-  #         conn = conn
-  #         |> put_resp_header("x-summary-cache", "MISS")
-  #         |> put_resp_header("x-cache-key", cache_key)
-
-  #         # Stream generated summary with delays
-  #         Summaries.stream_summary_chunks(event)
-  #         |> Enum.reduce_while(conn, fn chunk_data, conn ->
-  #           # Small delay to simulate AI processing (50-150ms)
-  #           Process.sleep(:rand.uniform(100) + 50)
-
-  #           event_data = Jason.encode!(chunk_data)
-
-  #           case chunk(conn, "data: #{event_data}\n\n") do
-  #             {:ok, conn} -> {:cont, conn}
-  #             {:error, _reason} -> {:halt, conn}
-  #           end
-  #         end)
-  #     end
-
-  #     conn
-  #   else
-  #     conn
-  #     |> put_status(:not_found)
-  #     |> put_view(EventApiWeb.ErrorJSON)
-  #     |> render(:"404")
-  #   end
-  # end
   def stream_summary(conn, %{"id" => id}) do
     event = Events.get_event!(id)
 
@@ -125,22 +78,6 @@ defmodule EventApiWeb.PublicController do
       |> render(:"404")
     end
   end
-
-  # defp stream_summary_chunks(conn, event) do
-  #   # Stream generated summary with delays
-  #   Summaries.stream_summary_chunks(event)
-  #   |> Enum.reduce_while(conn, fn chunk_data, conn ->
-  #     # Small delay to simulate AI processing (50-150ms)
-  #     Process.sleep(:rand.uniform(100) + 50)
-
-  #     event_data = Jason.encode!(chunk_data)
-
-  #     case chunk(conn, "data: #{event_data}\n\n") do
-  #       {:ok, conn} -> {:cont, conn}
-  #       {:error, _reason} -> {:halt, conn}
-  #     end
-  #   end)
-  # end
 
   defp stream_summary_chunks(conn, event) do
     # Simulate AI processing time for cache miss
