@@ -70,7 +70,6 @@ defmodule EventApi.ValidationTest do
 
       # Try to move back to DRAFT (should fail)
       conn = conn
-      |> put_req_header("authorization", @auth_token)
       |> patch(~p"/api/v1/events/#{id}", event: %{"status" => "DRAFT"})
 
       response = json_response(conn, 422)
@@ -94,7 +93,6 @@ defmodule EventApi.ValidationTest do
 
       # Try to update forbidden field (title)
       conn = conn
-      |> put_req_header("authorization", @auth_token)
       |> patch(~p"/api/v1/events/#{id}", event: %{"title" => "Modified Title", "status" => "PUBLISHED"})
 
       response = json_response(conn, 422)

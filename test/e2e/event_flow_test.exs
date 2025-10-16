@@ -33,7 +33,6 @@ defmodule EventApi.E2E.EventFlowTest do
 
       # Publish event
       conn = conn
-      |> put_req_header("authorization", @auth_token)
       |> patch(~p"/api/v1/events/#{id}", event: %{"status" => "PUBLISHED"})
 
       assert %{"event" => %{"status" => "PUBLISHED"}} = json_response(conn, 200)
@@ -45,7 +44,6 @@ defmodule EventApi.E2E.EventFlowTest do
 
       # Cancel event
       conn = conn
-      |> put_req_header("authorization", @auth_token)
       |> patch(~p"/api/v1/events/#{id}", event: %{"status" => "CANCELLED"})
 
       assert %{"event" => %{"status" => "CANCELLED"}} = json_response(conn, 200)

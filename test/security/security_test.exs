@@ -39,7 +39,6 @@ defmodule EventApi.SecurityTest do
 
       # Verify private fields ARE in admin endpoint
       conn = conn
-      |> put_req_header("authorization", @auth_token)
       |> get(~p"/api/v1/events")
 
       admin_events = json_response(conn, 200)["events"]
