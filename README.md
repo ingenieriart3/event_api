@@ -162,6 +162,12 @@ curl -N "http://localhost:4000/api/v1/public/events/e3c1b8d9-3bd5-4c64-8c4d-0f6d
 curl http://localhost:4000/health
 ```
 
+### 📁 Insomnia V5 collection yaml
+
+```bash
+test/request/event_api.yaml
+```
+
 ## 🎯 Response Formats
 
 ### Success Responses
