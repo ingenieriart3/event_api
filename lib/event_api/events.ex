@@ -70,6 +70,14 @@ defmodule EventApi.Events do
   def get_event!(id), do: Repo.get!(Event, id)
 
   @doc """
+  Gets a single event without raising on not found.
+  Returns nil if event doesn't exist.
+  """
+  def get_event(id) do
+    Repo.get(Event, id)
+  end
+
+  @doc """
   Creates an event.
   """
   def create_event(attrs \\ %{}) do
