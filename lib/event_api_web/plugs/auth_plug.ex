@@ -8,7 +8,8 @@ defmodule EventApiWeb.AuthPlug do
 
     case token do
       "Bearer " <> provided_token ->
-        static_token = Application.get_env(:event_api, :static_auth_token, "admin-token-123")
+        static_token =
+          Application.get_env(:event_api, :static_auth_token, "admin-token-123")
 
         if provided_token == static_token do
           conn
@@ -19,6 +20,7 @@ defmodule EventApiWeb.AuthPlug do
           |> send_resp(:unauthorized, ~s({"error": "Unauthorized"}))
           |> halt()
         end
+
       _ ->
         conn
         |> put_status(:unauthorized)

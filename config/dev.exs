@@ -14,7 +14,8 @@ config :event_api, EventApiWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "supersecretkey1234567890supersecretkey1234567890supersecretkey1234567890",
+  secret_key_base:
+    "supersecretkey1234567890supersecretkey1234567890supersecretkey1234567890",
   watchers: []
 
 config :event_api, :dev_routes, true

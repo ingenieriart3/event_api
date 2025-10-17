@@ -23,6 +23,7 @@ defmodule EventApi.Summaries.Cache do
       [{^key, summary}] ->
         Logger.info("[SUMMARY_CACHE] HIT for event: #{event.id}")
         {:ok, summary, key}
+
       [] ->
         Logger.info("[SUMMARY_CACHE] MISS for event: #{event.id}")
         {:miss, key}

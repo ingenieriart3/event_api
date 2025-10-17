@@ -28,6 +28,7 @@ defmodule EventApiWeb.ErrorJSON do
 
   def render("422.json", %{changeset: changeset}) do
     IO.inspect("✅ USING 422.json WITH CHANGESET", label: "ERROR_DEBUG")
+
     %{
       error: %{
         code: "VALIDATION_ERROR",
@@ -39,6 +40,7 @@ defmodule EventApiWeb.ErrorJSON do
 
   def render("422.json", _assigns) do
     IO.inspect("🟡 USING 422.json WITHOUT CHANGESET", label: "ERROR_DEBUG")
+
     %{
       error: %{
         code: "VALIDATION_ERROR",

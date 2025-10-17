@@ -5,7 +5,8 @@ defmodule EventApiWeb.FallbackController do
     conn
     |> put_status(:unprocessable_entity)
     |> put_view(EventApiWeb.ErrorJSON)
-    |> render("422.json", changeset: changeset)  # ← Asegurar que pasa el changeset
+    # ← Asegurar que pasa el changeset
+    |> render("422.json", changeset: changeset)
   end
 
   def call(conn, {:error, :not_found}) do

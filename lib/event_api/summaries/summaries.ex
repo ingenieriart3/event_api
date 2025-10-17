@@ -27,10 +27,12 @@ defmodule EventApi.Summaries do
     tokens = String.split(full_summary, " ")
 
     tokens
-    |> Enum.chunk_every(3)  # 2-5 tokens per chunk
+    # 2-5 tokens per chunk
+    |> Enum.chunk_every(3)
     |> Enum.with_index()
     |> Enum.map(fn {chunk_tokens, index} ->
       chunk = Enum.join(chunk_tokens, " ")
+
       %{
         chunk: chunk,
         index: index,
@@ -48,8 +50,14 @@ defmodule EventApi.Summaries do
     end)
   end
 
-  defp build_summary(%{title: title, location: location, start_at: start_at, status: status}) do
-    date_str = if start_at, do: Calendar.strftime(start_at, "%B %d, %Y"), else: "TBA"
+  defp build_summary(%{
+         title: title,
+         location: location,
+         start_at: start_at,
+         status: status
+       }) do
+    date_str =
+      if start_at, do: Calendar.strftime(start_at, "%B %d, %Y"), else: "TBA"
 
     base_summary = """
     Join us for #{title}, happening in #{location} on #{date_str}.
@@ -59,7 +67,8 @@ defmodule EventApi.Summaries do
 
     # Ensure 50-100 tokens (words)
     String.split(base_summary, " ")
-    |> Enum.take(80)  # Target ~80 tokens
+    # Target ~80 tokens
+    |> Enum.take(80)
     |> Enum.join(" ")
   end
 end

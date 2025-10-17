@@ -19,6 +19,7 @@ defmodule EventApi.Events.Notifications do
     - Location: #{event.location}
     - Created by: #{event.created_by || "N/A"}
     """)
+
     :ok
   end
 
@@ -33,6 +34,7 @@ defmodule EventApi.Events.Notifications do
     - Status: #{event.status}
     - Internal Notes: #{if event.internal_notes, do: "updated", else: "none"}
     """)
+
     :ok
   end
 
@@ -48,6 +50,7 @@ defmodule EventApi.Events.Notifications do
     - Location: #{event.location}
     - Is Upcoming: #{Event.is_upcoming?(event)}
     """)
+
     :ok
   end
 
@@ -55,7 +58,10 @@ defmodule EventApi.Events.Notifications do
   Notify when an event is cancelled.
   """
   def notify_event_cancelled(%Event{} = event) do
-    cancellation_reason = if event.internal_notes, do: " - Reason: #{event.internal_notes}", else: ""
+    cancellation_reason =
+      if event.internal_notes,
+        do: " - Reason: #{event.internal_notes}",
+        else: ""
 
     Logger.info("""
     [NOTIFICATION] Event CANCELLED:
@@ -64,6 +70,7 @@ defmodule EventApi.Events.Notifications do
     - Was scheduled for: #{format_datetime(event.start_at)}
     - Location: #{event.location}#{cancellation_reason}
     """)
+
     :ok
   end
 
@@ -79,10 +86,12 @@ defmodule EventApi.Events.Notifications do
     - Starts: #{format_datetime(event.start_at)}
     - Location: #{event.location}
     """)
+
     :ok
   end
 
   defp format_datetime(nil), do: "N/A"
+
   defp format_datetime(datetime) do
     DateTime.to_iso8601(datetime)
   end

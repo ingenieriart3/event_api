@@ -49,7 +49,8 @@ defmodule EventApi.Events do
     location_list =
       String.split(locations, ",")
       |> Enum.map(&String.trim/1)
-      |> Enum.map(&"%#{&1}%")  # ← Agregar wildcards
+      # ← Agregar wildcards
+      |> Enum.map(&"%#{&1}%")
 
     query
     |> where([e], fragment("LOWER(?) LIKE ANY(?)", e.location, ^location_list))
@@ -88,7 +89,9 @@ defmodule EventApi.Events do
       {:ok, event} ->
         Notifications.notify_event_created(event)
         {:ok, event}
-      error -> error
+
+      error ->
+        error
     end
   end
 
@@ -124,28 +127,34 @@ defmodule EventApi.Events do
           notify_status_change(event, updated_event)
 
           {:ok, updated_event}
-        error -> error
+
+        error ->
+          error
       end
     end
   end
 
   defp cache_invalidation_required?(old_fields, updated_event) do
     old_fields.title != updated_event.title ||
-    old_fields.location != updated_event.location ||
-    old_fields.start_at != updated_event.start_at ||
-    old_fields.end_at != updated_event.end_at
+      old_fields.location != updated_event.location ||
+      old_fields.start_at != updated_event.start_at ||
+      old_fields.end_at != updated_event.end_at
   end
 
   defp notify_status_change(old_event, new_event) do
     case {old_event.status, new_event.status} do
       {"DRAFT", "PUBLISHED"} ->
         Notifications.notify_event_published(new_event)
+
       {"CANCELLED", "PUBLISHED"} ->
         Notifications.notify_event_republished(new_event)
+
       {_, "CANCELLED"} when old_event.status != "CANCELLED" ->
         Notifications.notify_event_cancelled(new_event)
+
       {old_status, new_status} when old_status != new_status ->
         Notifications.notify_event_updated(new_event)
+
       _ ->
         # Solo cambió internal_notes, no el status
         if old_event.internal_notes != new_event.internal_notes do

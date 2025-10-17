@@ -130,8 +130,8 @@ defmodule EventApiWeb.PublicController do
   """
   def summary(conn, %{"id" => id}) do
     with {:ok, event} <- get_public_event(id),
-         {:ok, summary, cache_key, cache_status} <- generate_or_retrieve_summary(event) do
-
+         {:ok, summary, cache_key, cache_status} <-
+           generate_or_retrieve_summary(event) do
       conn
       |> put_cache_headers(cache_key, cache_status)
       |> send_summary_response(summary)
@@ -224,6 +224,7 @@ defmodule EventApiWeb.PublicController do
 
   defp send_complete_summary(conn, summary) do
     event_data = Jason.encode!(%{chunk: summary, done: true})
+
     case chunk(conn, "data: #{event_data}\n\n") do
       {:ok, conn} -> conn
       {:error, _reason} -> conn
@@ -244,6 +245,7 @@ defmodule EventApiWeb.PublicController do
       case chunk(conn, "data: #{event_data}\n\n") do
         {:ok, conn} ->
           {:cont, conn}
+
         {:error, _reason} ->
           {:halt, conn}
       end

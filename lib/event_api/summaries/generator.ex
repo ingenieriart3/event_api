@@ -48,12 +48,15 @@ defmodule EventApi.Summaries.Generator do
   """
   def stream_summary_chunks(%Event{} = event) do
     summary = generate_summary(event)
-    chunks = String.split(summary, ~r/(?<=[.!?])\s+/) |> Enum.filter(&(&1 != ""))
+
+    chunks =
+      String.split(summary, ~r/(?<=[.!?])\s+/) |> Enum.filter(&(&1 != ""))
 
     chunks
     |> Stream.with_index()
     |> Stream.map(fn {chunk, index} ->
-      Process.sleep(Enum.random(80..150)) # Simulate streaming delay
+      # Simulate streaming delay
+      Process.sleep(Enum.random(80..150))
       %{chunk: chunk, index: index, total: length(chunks)}
     end)
   end

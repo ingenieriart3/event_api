@@ -23,7 +23,8 @@ defmodule EventApiWeb.Router do
     get "/events", EventController, :index
     post "/events", EventController, :create
     patch "/events/:id", EventController, :update
-    put "/events/:id", EventController, :update  # Opcional: soportar ambos
+    # Opcional: soportar ambos
+    put "/events/:id", EventController, :update
   end
 
   # Health check

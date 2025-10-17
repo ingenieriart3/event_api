@@ -37,7 +37,8 @@ defmodule EventApiWeb.EventController do
 
     case token do
       "Bearer " <> provided_token ->
-        static_token = Application.get_env(:event_api, :static_auth_token, "admin-token-123")
+        static_token =
+          Application.get_env(:event_api, :static_auth_token, "admin-token-123")
 
         if provided_token == static_token do
           conn
@@ -48,6 +49,7 @@ defmodule EventApiWeb.EventController do
           |> render(:"401")
           |> halt()
         end
+
       _ ->
         conn
         |> put_status(:unauthorized)

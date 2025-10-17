@@ -19,9 +19,10 @@ defmodule EventApi.SecurityTest do
   describe "Security" do
     test "private fields are never exposed in public endpoints", %{conn: conn} do
       # Create event with private fields
-      conn = conn
-      |> put_req_header("authorization", @auth_token)
-      |> post(~p"/api/v1/events", event: @private_attrs)
+      conn =
+        conn
+        |> put_req_header("authorization", @auth_token)
+        |> post(~p"/api/v1/events", event: @private_attrs)
 
       %{"event" => %{"id" => id}} = json_response(conn, 201)
 
@@ -38,8 +39,9 @@ defmodule EventApi.SecurityTest do
       refute Map.has_key?(public_event, "created_by")
 
       # Verify private fields ARE in admin endpoint
-      conn = conn
-      |> get(~p"/api/v1/events")
+      conn =
+        conn
+        |> get(~p"/api/v1/events")
 
       admin_events = json_response(conn, 200)["events"]
       admin_event = Enum.find(admin_events, &(&1["id"] == id))
@@ -53,15 +55,18 @@ defmodule EventApi.SecurityTest do
 
     test "summary endpoints respect event visibility", %{conn: conn} do
       # Create DRAFT event
-      conn = conn
-      |> put_req_header("authorization", @auth_token)
-      |> post(~p"/api/v1/events", event: %{
-        "title" => "Draft Event",
-        "start_at" => @future_date,
-        "end_at" => @future_end_date,
-        "location" => "Test",
-        "status" => "DRAFT"
-      })
+      conn =
+        conn
+        |> put_req_header("authorization", @auth_token)
+        |> post(~p"/api/v1/events",
+          event: %{
+            "title" => "Draft Event",
+            "start_at" => @future_date,
+            "end_at" => @future_end_date,
+            "location" => "Test",
+            "status" => "DRAFT"
+          }
+        )
 
       %{"event" => %{"id" => id}} = json_response(conn, 201)
 
