@@ -1,9 +1,14 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
+    name: Run Tests and Code Quality
     runs-on: ubuntu-latest
 
     services:
@@ -13,25 +18,65 @@ jobs:
           POSTGRES_USER: event_service_user
           POSTGRES_PASSWORD: event_service_password
           POSTGRES_DB: event_service_test
-        ports: [5432:5432]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: erlef/setup-beam@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
         with:
           elixir-version: '1.16.0'
+          otp-version: '26.0'
 
-      - uses: actions/cache@v3
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
         with:
-          path: deps
+          path: |
+            deps
+            _build
           key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
 
-      - run: mix deps.get
-      - run: mix ecto.create && mix ecto.migrate
-        env: { MIX_ENV: test }
-      - run: mix test --cover
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Create and migrate database
+        run: |
+          mix ecto.create
+          mix ecto.migrate
+        env:
+          MIX_ENV: test
+
+      - name: Run tests with coverage
+        run: mix test --cover
         env:
           MIX_ENV: test
           STATIC_AUTH_TOKEN: 'admin-token-123'
-      - run: mix format --check-formatted
-      - run: mix credo --strict
+
+      - name: Run code formatting check
+        run: mix format --check-formatted
+
+      - name: Run static analysis
+        run: mix credo --strict
+
+    # - name: Generate LCOV coverage report
+    #   run: mix coveralls.lcov
+    #   env:
+    #     MIX_ENV: test
+
+    # - name: Upload coverage to Coveralls
+    #   uses: coverallsapp/github-action@v2
+    #   with:
+    #     file: coverage/lcov.info
+    #     base-path: .
+    #   env:
+    #     COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
