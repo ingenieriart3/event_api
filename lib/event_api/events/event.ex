@@ -79,22 +79,6 @@ defmodule EventApi.Events.Event do
     end
   end
 
-  # defp validate_status_transitions(changeset, %{status: current_status})
-  #      when not is_nil(current_status) do
-  #   new_status = get_field(changeset, :status)
-
-  #   cond do
-  #     current_status in ["PUBLISHED", "CANCELLED"] and new_status == "DRAFT" ->
-  #       add_error(
-  #         changeset,
-  #         :status,
-  #         "cannot move from #{current_status} back to DRAFT"
-  #       )
-
-  #     true ->
-  #       changeset
-  #   end
-  # end
   defp validate_status_transitions(changeset, %{status: current_status})
        when not is_nil(current_status) do
     new_status = get_field(changeset, :status)
