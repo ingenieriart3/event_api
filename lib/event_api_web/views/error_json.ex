@@ -3,10 +3,7 @@ defmodule EventApiWeb.ErrorJSON do
   This module is invoked by your endpoint in case of errors on JSON requests.
   """
 
-  # def render(template, _assigns) do
-  #   IO.inspect("🔴 ERRORJSON CALLED - Template: #{template} - USING DEFAULT", label: "ERROR_DEBUG")
-  #   %{error: %{detail: Phoenix.Controller.status_message_from_template(template)}}
-  # end
+  require Logger
 
   def render("404.json", _assigns) do
     %{
@@ -27,7 +24,7 @@ defmodule EventApiWeb.ErrorJSON do
   end
 
   def render("422.json", %{changeset: changeset}) do
-    IO.inspect("✅ USING 422.json WITH CHANGESET", label: "ERROR_DEBUG")
+    Logger.debug("[ERROR_JSON] Using 422.json with changeset")
 
     %{
       error: %{
@@ -39,7 +36,7 @@ defmodule EventApiWeb.ErrorJSON do
   end
 
   def render("422.json", _assigns) do
-    IO.inspect("🟡 USING 422.json WITHOUT CHANGESET", label: "ERROR_DEBUG")
+    Logger.debug("[ERROR_JSON] Using 422.json with changeset")
 
     %{
       error: %{

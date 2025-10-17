@@ -1,4 +1,7 @@
 defmodule EventApiWeb.AuthPlug do
+  @moduledoc """
+  Authentication plug for Bearer token validation.
+  """
   import Plug.Conn
 
   def init(opts), do: opts

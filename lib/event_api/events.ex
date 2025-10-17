@@ -1,8 +1,12 @@
 defmodule EventApi.Events do
+  @moduledoc """
+  Events context - core business logic for event management.
+  """
   import Ecto.Query, warn: false
-  alias EventApi.Repo
   alias EventApi.Events.Event
   alias EventApi.Events.Notifications
+  alias EventApi.Repo
+  alias EventApi.Summaries.Cache
 
   @doc """
   Returns paginated list of events with filtering
@@ -98,40 +102,83 @@ defmodule EventApi.Events do
   @doc """
   Updates an event (only status and internal_notes allowed).
   """
+  # def update_event(%Event{} = event, attrs) do
+  #   # Validar que solo se intenten actualizar status e internal_notes
+  #   allowed_fields = Map.take(attrs, ["status", "internal_notes"])
+  #   forbidden_fields = Map.drop(attrs, ["status", "internal_notes"])
+
+  #   if map_size(forbidden_fields) > 0 do
+  #     {:error, :forbidden_fields}
+  #   else
+  #     old_fields = %{
+  #       title: event.title,
+  #       location: event.location,
+  #       start_at: event.start_at,
+  #       end_at: event.end_at
+  #     }
+
+  #     event
+  #     |> Event.changeset(allowed_fields)
+  #     |> Repo.update()
+  #     |> case do
+  #       {:ok, updated_event} ->
+  #         # Invalidar cache si campos relevantes cambiaron
+  #         if cache_invalidation_required?(old_fields, updated_event) do
+  #           EventApi.Summaries.Cache.invalidate(updated_event)
+  #         end
+
+  #         # Notificar cambios de estado
+  #         notify_status_change(event, updated_event)
+
+  #         {:ok, updated_event}
+
+  #       error ->
+  #         error
+  #     end
+  #   end
+  # end
   def update_event(%Event{} = event, attrs) do
-    # Validar que solo se intenten actualizar status e internal_notes
     allowed_fields = Map.take(attrs, ["status", "internal_notes"])
     forbidden_fields = Map.drop(attrs, ["status", "internal_notes"])
 
     if map_size(forbidden_fields) > 0 do
       {:error, :forbidden_fields}
     else
-      old_fields = %{
-        title: event.title,
-        location: event.location,
-        start_at: event.start_at,
-        end_at: event.end_at
-      }
-
-      event
-      |> Event.changeset(allowed_fields)
-      |> Repo.update()
-      |> case do
-        {:ok, updated_event} ->
-          # Invalidar cache si campos relevantes cambiaron
-          if cache_invalidation_required?(old_fields, updated_event) do
-            EventApi.Summaries.Cache.invalidate(updated_event)
-          end
-
-          # Notificar cambios de estado
-          notify_status_change(event, updated_event)
-
-          {:ok, updated_event}
-
-        error ->
-          error
-      end
+      update_allowed_fields(event, allowed_fields)
     end
+  end
+
+  defp get_old_fields(%Event{} = event) do
+    %{
+      title: event.title,
+      location: event.location,
+      start_at: event.start_at,
+      end_at: event.end_at
+    }
+  end
+
+  defp update_allowed_fields(event, allowed_fields) do
+    old_fields = get_old_fields(event)
+
+    event
+    |> Event.changeset(allowed_fields)
+    |> Repo.update()
+    |> case do
+      {:ok, updated_event} ->
+        handle_successful_update(old_fields, event, updated_event)
+
+      error ->
+        error
+    end
+  end
+
+  defp handle_successful_update(old_fields, old_event, updated_event) do
+    if cache_invalidation_required?(old_fields, updated_event) do
+      Cache.invalidate(updated_event)
+    end
+
+    notify_status_change(old_event, updated_event)
+    {:ok, updated_event}
   end
 
   defp cache_invalidation_required?(old_fields, updated_event) do

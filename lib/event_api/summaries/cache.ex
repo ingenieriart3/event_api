@@ -5,6 +5,8 @@ defmodule EventApi.Summaries.Cache do
   use GenServer
   require Logger
 
+  alias EventApi.Events.Event
+
   @table_name :summary_cache
 
   # Client API
@@ -50,7 +52,7 @@ defmodule EventApi.Summaries.Cache do
   Generate cache key based on public fields.
   """
   def generate_key(event) do
-    public_data = EventApi.Events.Event.public_fields(event)
+    public_data = Event.public_fields(event)
     :crypto.hash(:sha256, Jason.encode!(public_data)) |> Base.encode16()
   end
 

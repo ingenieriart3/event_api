@@ -1,4 +1,7 @@
 defmodule EventApi.Application do
+  @moduledoc """
+  Event API main application module.
+  """
   use Application
 
   @impl true

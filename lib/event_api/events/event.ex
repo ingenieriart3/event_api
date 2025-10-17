@@ -1,4 +1,7 @@
 defmodule EventApi.Events.Event do
+  @moduledoc """
+  Event schema and domain logic for event management.
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -18,7 +21,6 @@ defmodule EventApi.Events.Event do
     # Private fields (never exposed publicly)
     field :internal_notes, :string
     field :created_by, :string
-
     timestamps(type: :utc_datetime)
   end
 
@@ -77,20 +79,34 @@ defmodule EventApi.Events.Event do
     end
   end
 
+  # defp validate_status_transitions(changeset, %{status: current_status})
+  #      when not is_nil(current_status) do
+  #   new_status = get_field(changeset, :status)
+
+  #   cond do
+  #     current_status in ["PUBLISHED", "CANCELLED"] and new_status == "DRAFT" ->
+  #       add_error(
+  #         changeset,
+  #         :status,
+  #         "cannot move from #{current_status} back to DRAFT"
+  #       )
+
+  #     true ->
+  #       changeset
+  #   end
+  # end
   defp validate_status_transitions(changeset, %{status: current_status})
        when not is_nil(current_status) do
     new_status = get_field(changeset, :status)
 
-    cond do
-      current_status in ["PUBLISHED", "CANCELLED"] and new_status == "DRAFT" ->
-        add_error(
-          changeset,
-          :status,
-          "cannot move from #{current_status} back to DRAFT"
-        )
-
-      true ->
-        changeset
+    if current_status in ["PUBLISHED", "CANCELLED"] and new_status == "DRAFT" do
+      add_error(
+        changeset,
+        :status,
+        "cannot move from #{current_status} back to DRAFT"
+      )
+    else
+      changeset
     end
   end
 
@@ -107,7 +123,6 @@ defmodule EventApi.Events.Event do
       end_at: event.end_at,
       location: event.location,
       status: event.status
-      # is_upcoming: is_upcoming?(event)
     }
   end
 
@@ -117,6 +132,4 @@ defmodule EventApi.Events.Event do
   def is_upcoming?(%{start_at: start_at}) when not is_nil(start_at) do
     DateTime.compare(start_at, DateTime.utc_now()) == :gt
   end
-
-  def is_upcoming?(_), do: false
 end

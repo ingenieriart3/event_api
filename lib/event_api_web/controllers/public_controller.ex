@@ -110,8 +110,8 @@ defmodule EventApiWeb.PublicController do
   use EventApiWeb, :controller
 
   alias EventApi.Events
-  alias EventApi.Summaries.Cache
   alias EventApi.Summaries
+  alias EventApi.Summaries.Cache
 
   @public_statuses ["PUBLISHED", "CANCELLED"]
 
@@ -147,14 +147,23 @@ defmodule EventApiWeb.PublicController do
   @doc """
   Stream AI summary via Server-Sent Events
   """
-  def stream_summary(conn, %{"id" => id}) do
-    with {:ok, event} <- get_public_event(id) do
-      stream_summary_content(conn, event)
-    else
-      {:error, :not_found} ->
-        send_not_found(conn)
+  # def stream_summary(conn, %{"id" => id}) do
+  #   with {:ok, event} <- get_public_event(id) do
+  #     stream_summary_content(conn, event)
+  #   else
+  #     {:error, :not_found} ->
+  #       send_not_found(conn)
 
-      {:error, :not_public} ->
+  #     {:error, :not_public} ->
+  #       send_not_found(conn)
+  #   end
+  # end
+  def stream_summary(conn, %{"id" => id}) do
+    case get_public_event(id) do
+      {:ok, event} ->
+        stream_summary_content(conn, event)
+
+      {:error, _reason} ->
         send_not_found(conn)
     end
   end
