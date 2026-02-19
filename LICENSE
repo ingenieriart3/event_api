@@ -1,0 +1,16 @@
+BUSINESS SOURCE LICENSE 1.1
+
+Parameters:
+
+- Licensor: Hernán Pereyra
+- Software: Event Api (Elixir)
+- Use Limitation: El uso del Software para propósitos comerciales o de producción está prohibido, a menos que sea un uso interno que no compita con los servicios del Licensor. No se permite ofrecer el Software como un servicio gestionado (SaaS) a terceros.
+- Change Date: 2029-01-01
+- Change License: Apache License v2.0
+
+Terms:
+
+1. El Licensor otorga por la presente el derecho de copiar, modificar y distribuir el Software de forma gratuita, siempre que se cumpla con la Limitación de Uso descrita anteriormente.
+2. Si el uso previsto excede la Limitación de Uso (por ejemplo, despliegue global en un banco o entidad financiera), se requiere obtener una Licencia Comercial directamente del Licensor.
+3. En la "Change Date" establecida, esta licencia será reemplazada automáticamente por la "Change License" (Apache 2.0).
+4. Todas las copias del Software deben incluir este aviso de licencia.
